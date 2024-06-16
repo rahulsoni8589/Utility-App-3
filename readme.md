@@ -1,3 +1,107 @@
+# Implementation of Redux in React App using Redux-tool kit
+
+## creating Slice [Reducer]
+- use require for external Library
+-  use import for internal libray 
+- Eliminated the need of action contants and action create
+- data is received using payload object in the action fn/object (inbuilt)
+- const notesSlice  = createSlice({
+    name:"anyName",
+    initialState:defineState,
+    reducers:{
+        abc: (state,action)=>{
+
+        },
+        dgc: (state,action)=>{
+
+        }
+    }
+})
+
+```javascript
+on reducer file
+
+const { createSlice } = require("@reduxjs/toolkit")
+
+const initialState={
+    todos:[
+        {text:"Go to Gym at 6", completed: false},
+        {text: "Study at 8", completed: true}
+    ]
+}
+
+const todoSlice = createSlice({
+    name: "todo",
+    initialState:initialState,
+    reducers:{
+        add:(state,action)=>{
+            state.todos.push({text:action.payload,completed:false})
+        },
+        toggle:(state,action)=>{
+            state.todos.map((todo,index)=>{
+                if(index === action.payload){
+                    todo.completed=!todo.completed
+                }
+                return todo
+            })
+        }
+    }
+})
+
+export const todoReducer = todoSlice.reducer //reducer not reducers
+export const actions = todoSlice.actions
+export const todoSelector = (state)=>state.todoReducer.todos
+
+```
+## configure store
+- import { configureStore } from "@reduxjs/toolkit";
+- const store = configureStore({
+    reducer:{
+        todoReducer,
+        noteReducer
+    }
+})
+```javascript
+import {noteReducer} from "./reducers/noteReducer2";
+import {todoReducer} from "./reducers/todoReducer2";
+
+import { configureStore } from "@reduxjs/toolkit";
+
+const store = configureStore({
+    reducer:{
+        todoReducer,
+        noteReducer
+    }
+})
+
+export default store
+
+```
+## usage of store [dispatch and selector]:
+- useDispatch will be still in use from react-redux library.
+- useSelector will be still in use from react-redux library. but its inner cbfn will be in Reducer file as below
+- so as create a reuable constant in the Reducer file and export it whereever required.
+- export const todoSelector = (state)=>state.ReducerName.list/objectName 
+- and then const todos=useSelector(todoSelector);
+- By using selector in Reducer file we follow the Principle of DRY (donot repeat youself)
+
+```javascript
+on Reducer file
+export const todoSelector = (state)=>state.todoReducer.todos;
+
+on components
+import { actions } from "../../redux/reducers/noteReducer2";
+import { useDispatch } from "react-redux";
+
+const dispatch = useDispatch()
+const todos=useSelector(todoSelector);
+
+dispatch(actions.add(Note))
+
+<button onClick={()=>dispatch(actions.toggle(index))} className="btn btn-danger">Change</button>
+
+```
+
 # Implementation of Redux in React App
 
 - import * as redux from "redux"; 
