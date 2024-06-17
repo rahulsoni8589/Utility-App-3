@@ -102,6 +102,75 @@ dispatch(actions.add(Note))
 
 ```
 
+# Extra Reducer 
+
+
+```javascript
+on Notification reducer module
+import {createSlice} from "@reduxjs/toolkit"
+
+const initialState = {
+    message:""
+}
+
+const notiSlice = createSlice({
+    name:"notification",
+    initialState:initialState,
+    reducers:{
+
+    },
+    extraReducers:{
+        // these ER not belong to notifiaction Slice but the other slices
+        // reducerName "name"/ActionName ie inside "reducers"
+        "todo/add":(state,action)=>{
+            state.message = "Todo is create"
+        }
+    }
+})
+
+export const notificationReducer = notiSlice.reducer;
+export const action = notiSlice.actions;
+export const notificationSelector = (state)=>state.notificationReducer.message;
+
+on store module
+
+import { notificationSelector } from "../reducers/notificationReducer";
+const store = configureStore({
+    reducer:{
+        todoReducer,
+        noteReducer,
+        notificationReducer
+    }
+})
+
+on component module
+
+import { useDispatch,useSelector } from "react-redux";
+import { notificationSelector } from "../reducers/notificationReducer";
+
+useEffect(()=>{
+    setTimeout(() => {
+      disptach(action.remove())
+    }, 1500);
+  }, [disptach,notiMessage])
+
+      OoRR
+
+  if(notiMessage){
+    setTimeout(() => {
+      disptach(action.remove())
+    }, 1500);
+  }
+
+
+const notiMessage = useSelector(notificationSelector)
+{ notiMessage && 
+  <div class="alert alert-success" role="alert">
+    {notiMessage}
+  </div>
+  }
+```
+
 # Implementation of Redux in React App
 
 - import * as redux from "redux"; 
