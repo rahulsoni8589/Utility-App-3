@@ -108,6 +108,7 @@ dispatch(actions.add(Note))
 ```javascript
 on Notification reducer module
 import {createSlice} from "@reduxjs/toolkit"
+import { actions } from "./todoReducer2"
 
 const initialState = {
     message:""
@@ -119,13 +120,29 @@ const notiSlice = createSlice({
     reducers:{
 
     },
+
+    FIRSTWAY
     extraReducers:{
         // these ER not belong to notifiaction Slice but the other slices
         // reducerName "name"/ActionName ie inside "reducers"
         "todo/add":(state,action)=>{
             state.message = "Todo is create"
         }
-    }
+    },
+
+    SECOND WAY recommended (USING BUILDER)
+    extraReducers:(builder)=>{
+    builder.addCase(actions.add, (state,action)=>{
+        state.message = "Todo is created"
+    })
+  },
+
+  THIRD WAY (USING MAP OBJECT)
+  extraReducers:{
+      [actions.add]:(state,action)=>{
+            state.message = "Todo is created"
+      }
+  }
 })
 
 export const notificationReducer = notiSlice.reducer;
@@ -149,9 +166,11 @@ import { useDispatch,useSelector } from "react-redux";
 import { notificationSelector } from "../reducers/notificationReducer";
 
 useEffect(()=>{
+  if(message){
     setTimeout(() => {
       disptach(action.remove())
-    }, 1500);
+      }, 1500);
+    }
   }, [disptach,notiMessage])
 
       OoRR
